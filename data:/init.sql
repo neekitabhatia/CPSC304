@@ -1,56 +1,68 @@
-CREATE DATABASE main;
+create database main;
 
 use main;
+/*
+COMMENTS: 1. We need to add null or not null to all variables
+2. We need to look at whether tables need to delete on cascade etc.
+3. insert into
+*/
 
-CREATE TABLE RECREATION_CENTER{
-NAME CHAR[20],
-ADDRESS CHAR[100] UNIQUE,
-PRIMARY KEY: NAME
-}
 
-CREATE TABLE EVENT_BOOKING{
-EVENT_ID CHAR[10]
-NAME CHAR[20],
-EVENT_TYPE CHAR[100],
-COST INTEGER,
-TIME_IN DATETIME,
-TIME_OUT DATETIME,
-ROOM_ID INTEGER NOT NULL,
-PRIMARY KEY: (EVENT_ID, TIME_IN, TIME_OUT, ROOM_ID)
-FOREIGN KEY: ROOM_ID REFERENCES FACILITIES
-}
+create table recreation_center
+(name varchar(20),
+address varchar(100) unique,
+primary key (name));
 
-CREATE TABLE FACILITIES_CONTAINS{
-ROOM_ID INTEGER,
-CAPACITY INTEGER,
-REC_CENTER_NAME CHAR[20] NOT NULL,
-PRIMARY KEY: ROOM_ID,
-FOREIGN KEY: REC_CENTER_NAME REFERENCES RECREATION_CENTER
-}
+grant select on recreation_center to public;
 
-CREATE TABLE TRANSACTION_PURCHASE{
-TRANSACTION_ID INTEGER,
-CARD_NUMBER INTEGER NOT NULL,
-AMOUNT INTEGER,
-DATE DATETIME,
-ACCOUNT_ID INTEGER NOT NULL,
-EVENT_ID CHAR[10] NOT NULL,
-PRIMARY KEY: TRANSACTION_ID,
-FOREIGN KEY: ACCOUNT_ID REFERENCES ACCOUNT, EVENT_ID REFERENCES EVENT_BOOKING
-}
+create table event_booking
+(event_id char(10)
+name varchar(20),
+event_type varchar(100),
+cost integer,
+time_in datetime,
+time_out datetime,
+room_id integer not null,
+primary key (event_id, time_in, time_out, room_id),
+foreign key (room_id) references facilities);
 
-CREATE TABLE ACCOUNT{
-ACCOUNT_ID INTEGER,
-NAME CHAR[20],
-ADDRESS CHAR[100],
-PHONE_NUMBER INTEGER,
-PRIMARY KEY: ACCOUNT_ID
-}
+grant select on event_booking to public;
 
-CREATE TABLE MEMBERSHIP{
-MEMBERSHIP_ID INTEGER,
-STATUS CHAR[20],
-ACCOUNT_ID INTEGER NOT NULL
-PRIMARY KEY: (MEMBERSHIP_ID, ACCOUNT_ID),
-FOREIGN KEY: ACCOUNT_ID REFERENCES ACCOUNT
-}
+create table facilities_contains
+(room_id integer,
+capacity integer,
+rec_center_name varchar(20) not null,
+primary key (room_id),
+foreign key (rec_center_name) references recreation_center);
+
+grant select on facilities_contains to public;
+
+create table transaction_purchase
+(transaction_id integer,
+card_number integer not null,
+amount integer,
+date datetime,
+account_id integer not null,
+event_id char(10) not null,
+primary key (transaction_id),
+foreign key (account_id) references account, event_id references event_booking);
+
+grant select on transaction_purchase to public;
+
+create table account
+(account_id integer,
+name varchar(20),
+address varchar(100),
+phone_number integer,
+primary key (account_id));
+
+grant select on account to public;
+
+create table membership
+(membership_id integer,
+status varchar(20),
+account_id integer not null
+primary key (membership_id, account_id),
+foreign key (account_id) references account);
+
+grant select on membership to public;
