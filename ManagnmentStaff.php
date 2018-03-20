@@ -11,6 +11,8 @@
 	<input type="submit" name="submit" value="Submit">
 </form>
 
+<a href="index.php">Back</a>
+
 <html>
 
 <?php include "template/footer.php"; ?>
