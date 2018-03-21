@@ -73,3 +73,100 @@ primary key (membership_id, account_id),
 foreign key (account_id) references account ON DELETE CASCADE);
 
 grant select on membership to public;
+
+insert into recreation_centre (name, address)
+values (‘west point grey recreation’, ‘ 3123 west broadway ’);
+
+insert into recreation_centre (name, address)
+values (‘kitsilano recreation’, ‘ 2112 union blvd ’);
+
+insert into recreation_centre (name, address)
+values (‘kerrisdale recreation’, ‘ 342 west blvd ’);
+
+insert into recreation_centre (name, address)
+values (‘douglas park recreation’, ‘ 34234 maple st ’);
+
+insert into recreation_centre (name, address)
+values (‘Marpole Recreation’, ‘ 2421 Oak St ’);
+
+
+insert into event_booking(event_id,name,event_type,cost,time_in,time_out,room_id)
+values(‘12345’, ‘swimming drop in’, ‘aquatics’, ‘2’, ‘2018-02-10 12:00:00’, ‘2018-02-10 15:00:00’, ‘214’ );
+
+insert into event_booking(event_id,name,event_type,cost,time_in,time_out,room_id)
+values(‘12352’, ‘swim class level 1’, ‘aquatics’, ‘12’, ‘2018-02- 12 13:00:00’, ‘2018-02- 12 14:00:00’, ‘153’ );
+
+insert into event_booking(event_id,name,event_type,cost,time_in,time_out,room_id)
+values(‘76435’, ‘hip hop’, ‘dance’, ‘12’, ‘2018-02-14 11:00:00’, ‘2018-02-14 12:00:00’, ‘315’);
+
+insert into event_booking(event_id,name,event_type,cost,time_in,time_out,room_id)
+values(‘23462’, ‘boxing’, ‘martial arts’, ‘11’,’2018-02-21 13:00:00’, ‘2018-02-21 14:00:00’, ‘521’);
+
+insert into event_booking(event_id,name,event_type,cost,time_in,time_out,room_id)
+values(‘63451’, ‘barre fitness’, ‘fitness’, ‘12’, ‘2018-02-24 12:00:00’, ‘2018-02-24 13:00:00’, ‘531’);
+
+
+insert into facitlities_contains(room_id, capacity, rec_name)
+values(‘214’, ‘40’, ‘west point grey recreation’);
+
+insert into facitlities_contains(room_id, capacity, rec_name)
+values(‘153’, ‘50’, ‘kitsilano recreation’);
+
+insert into facitlities_contains(room_id, capacity, rec_name)
+values(‘315’, ‘40’, ‘kerrisdale recreation’);
+
+insert into facitlities_contains(room_id, capacity, rec_name)
+values(‘521’, ‘60’, ‘west point grey recreation’);
+
+insert into facitlities_contains(room_id, capacity, rec_name)
+values(‘531’, ‘120’, ‘kitsilano recreation’);
+
+
+insert into transaction_purchase(transaction_id, card_number, amount, date, account_id, event_id)
+values( ‘235’, ‘8364 2934 2394 3909’, ‘2’, ‘2018-02-10 11:32:14’, ‘3231’, ‘12345’);
+
+insert into transaction_purchase(transaction_id, card_number, amount, date, account_id, event_id)
+values(‘643’, ‘2398 0109 1209 3940’, ‘12’, ‘2018-02-12 12:23:14’, ‘7345’, ‘12352’);
+
+insert into transaction_purchase(transaction_id, card_number, amount, date, account_id, event_id)
+values(‘963’, ‘3904 0981 2304 3481’, ‘12’, ‘2018-02-14 10:13:12’, ‘2385’, ‘76435’);
+
+insert into transaction_purchase(transaction_id, card_number, amount, date, account_id, event_id)
+values(‘345’, ‘5623 6345 2345 3451’, ‘11’, ‘2018-02-21 12:15:46’, ‘7451’, ‘23462’);
+
+insert into transaction_purchase(transaction_id, card_number, amount, date, account_id, event_id)
+values(‘864’, ‘3514 2445 2351 9094’, ‘12’, ‘2018-02-24 11:23:25’, ‘8234’, ‘63451’);
+
+
+insert into account (account_id, name, address, phone_number)
+values(‘3231’, ‘gloria chan’, ‘129 granville st’, ‘604 347 3247’);
+
+insert into account (account_id, name, address, phone_number)
+values(‘7345’, ‘steve brown’, ‘3571 4th ave’, ‘604 123 0792’);
+
+insert into account (account_id, name, address, phone_number)
+values(‘2385’, ‘chris evans’, ‘391 hollywood ave’, ‘604 348 1237’);
+
+insert into account (account_id, name, address, phone_number)
+values(‘7451’, ‘cole sprouse’, ‘3947 disney st’, ‘604 384 2870’);
+
+insert into account (account_id, name, address, phone_number)
+values(‘8234’, ‘zac efron’, ‘247 high st’, ‘604 108 2384’);
+
+
+insert into membership (membership_id, status, account_id)
+values( ‘0012’, ‘1’, ‘3231’);
+
+insert into membership (membership_id, status, account_id)
+values( ‘0013’, ‘0’, ‘7345’);
+
+insert into membership (membership_id, status, account_id)
+values( ‘0014’, ‘1’, ‘2385’);
+
+insert into membership (membership_id, status, account_id)
+values( ‘0015’, ‘1’, ‘7451’);
+
+insert into membership (membership_id, status, account_id)
+values( ‘0016’, ‘1’, ‘8234’);
+
+
