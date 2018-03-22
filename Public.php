@@ -1,19 +1,27 @@
-<?php include "template/header.php"; ?>
+<?php include "template/header.php"; 
+include "install.php";
+if ($db_conn) {
+	$RecreationCenter = $_POST['insNo'];
+	executePlainSQL("Select * from recreation_center where rc_name = " + $RecreationCenter);
+}
+
+
+?>
 <html>
 <h2>Look for Recreational Programs</h2>
 <h3>Search by</h3>
 
 <form method="post">
 	<label for="Recreation Center">Recreation Center</label>
-	<input type="text" name="Recreation Center" id="Recreation Center">
+	<input type="text" name="RecreationCenter">
 	<label for="Event">Event</label>
 	<input type="text" name="Event" id="Event">
 	<label for="Cost Range">Cost range</label>
-	<input type="integer" name="cost min" id="cost min">
-	<input type="integer" name="cost max" id="cost max">
+	<input type="integer" name="costmin" >
+	<input type="integer" name="costmax" >
 	<label for="Time Range">Time range</label>
-	<input type="integer" name="time min" id="time min">
-	<input type="integer" name="time max" id="time max">
+	<input type="integer" name="timemin" >
+	<input type="integer" name="timemax" >
 	<input type="submit" name="submit" value="Submit">
 </form>
 
