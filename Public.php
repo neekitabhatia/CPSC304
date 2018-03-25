@@ -1,8 +1,10 @@
 <?php include "template/header.php"; 
 include "install.php";
 if ($db_conn) {
-	$RecreationCenter = $_POST['insNo'];
-	executePlainSQL("Select * from recreation_center where rc_name = " + $RecreationCenter);
+	$RecreationCenter = $_POST['RecreationCenter'];
+	echo $RecreationCenter;
+	$result = executePlainSQL("Select * from recreation_center where rc_name = '" . $RecreationCenter . "'");
+	printResult($result) ;	
 }
 
 
