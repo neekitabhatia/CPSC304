@@ -14,20 +14,20 @@ include "install.php";
 	<input type="submit" name="submit" value="Submit">
 </form>
 
-<!-- <?php
+<?php
 
 // Revenue between time ranges (Time1, Time2)
 
 $TimeFrom = $_POST['timefrom'];
 $TimeTo = $_POST['timeto'];
 
-$string = "select sum(tp_amount) from trans_purchase where ( tp_date between '"  . $TimeFrom . "'AND '" . $TimeTo . "' )";
+$string = "select sum(tp_amount) from trans_purchase where tp_date between '"  . $TimeFrom . "'AND '" . $TimeTo . "' )";
 $result = executePlainSQL($string);
 $ans = $row[0];
 echo "Total Revenue: " . $ans;
 
 // ORA-00942: table or view does not exist
-?> -->
+?>  
 
 <h3>Account Information</h3>
 <form method="post">
@@ -71,15 +71,17 @@ $BookingID = $_POST['BookingID'];
 $string = "select * from event_booking where eb_id = '" . $BookingID . "'";
 $result = executePlainSQL($string);
 echo "Booking Information: " ;
+echo $result;
 
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+	echo "Booking test";
     echo "<br> Booking ID: " . $row[0]; //bookingID
     echo "<br> Name: " . $row[1]; //eb_name
     echo "<br> Type: " . $row[2]; //ac_type
     echo "<br> Cost: : " . $row[3] ; //eb_cost
     echo "<br> TimeIn: " . $row[4]; //eb_timein
     echo "<br> TimeOut: " . $row[5]; //eb_time_out
-    echo "<br> Room ID: : " . $row[6] ; //fc_room_id
+    echo "<br> Room ID: : " . $row[6] ; //fc_room_id 
 
 }
 
@@ -109,6 +111,31 @@ OCICommit($db_conn);
 
 ?>
 
+<h3>Edit Rec Center Information</h3>
+<form method="post">
+	<label for="Rec_center_name">Old Rec_center_name</label>
+	<input type="text" name="Rec_center_name_old" id="Rec_center_name_new">
+	<label for="Rec_center_name">New Rec_center_name</label>
+	<input type="text" name="Rec_center_name_new" id="Rec_center_name_new">
+	<label for="address">Addresse</label>
+	<input type="text" name="address" id="address">
+	<input type="submit" name="submit" value="Submit">
+</form>
+
+<?php 
+
+// Update Rec Center - working
+
+$rc_name_old = $_POST['Rec_center_name_old'];
+$rc_name_new = $_POST['Rec_center_name_new'];
+$rc_address = $_POST['address'];
+
+$string = "update recreation_center set rc_name = '" . $rc_name_new . "', rc_address = '" . $rc_address . "' where rc_name = '" . $rc_name_old . "'";
+$result = executePlainSQL($string);
+OCICommit($db_conn);
+
+?>
+
 <h3>Create New Room</h3>
 <form method="post">
 	<label for="Rec_center_name">Rec_center_name</label>
@@ -122,9 +149,9 @@ OCICommit($db_conn);
 
 <?php 
 
-// Create Room
+// Create Room - Working 
 
-$Room_id = $_POST['Room_id']
+$Room_id = $_POST['Room_id'];
 $Rec_center_name = $_POST['Rec_center_name'];
 $capacity = $_POST['Capacity'];
 
@@ -134,16 +161,6 @@ OCICommit($db_conn);
 
 ?>
 
-<h3>Edit Rec Center Information</h3>
-<form method="post">
-	<label for="Rec_center_name">Old Rec_center_name</label>
-	<input type="text" name="Rec_center_name" id="Rec_center_name">
-	<label for="Rec_center_name">New Rec_center_name</label>
-	<input type="text" name="Rec_center_name" id="Rec_center_name">
-	<input type="text" name="address" id="address">
-	<input type="submit" name="submit" value="Submit">
-	<input type="submit" name="submit" value="Submit">
-</form>
 
 <a href="index.php">Back</a>
 
