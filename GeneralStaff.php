@@ -38,13 +38,46 @@ if(array_key_exists('Name', $_POST)){
 	<label for="AccountID">Account ID</label>
 	<input type="integer" name="AccountID" id="AccountID">
 	<label for="Name">Name</label>
-	<input type="text" name="Name" id="Name">
+	<input type="text" name="acName" id="Name">
 	<label for="Address">address</label>
-	<input type="text" name="address" id="address">
+	<input type="text" name="acAddress" id="address">
 	<label for="Phone Number">Phone Number</label>
-	<input type="integer" name="Phone Number" id="Phone Number">
+	<input type="integer" name="acPhoneNumber" id="Phone Number">
 	<input type="submit" name="uasubmit" value="Submit">
 </form>
+
+<?php
+if(array_key_exists('AccountID', $_POST)){
+
+	$account_id = "'" . (string)$_POST['AccountID'] . "'";
+	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . $account_id;
+	$result = executePlainSQL($string);
+	while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+			$account_id = $row[0]; //account_id
+			$account_name = $row[1]; //account_name
+			$account_address = $row[2]; //account_address
+			$account_pnumber = $row[3]; //account_phonenumber
+		}
+		if(array_key_exists('acName', $_POST)){
+			$account_name = $_POST["acName"];
+		}
+
+		if(array_key_exists('acAddress', $_POST)){
+			$account_address = $_POST["acAddress"];
+		}
+
+		if(array_key_exists('acPhoneNumber', $_POST)){
+			$account_pnumber = $_POST["acPhoneNumber"];
+		}
+
+		$string = "delete from account where account_id = " . $account_id;
+		OCICommit($db_conn);
+
+		$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
+		executePlainSQL($stringf);
+		OCICommit($db_conn);
+}
+?>
 
 <h3>Transaction Record</h3>
 <form method="post">
@@ -127,16 +160,23 @@ if($booleanlong){
 
 <h3>Refund</h3>
 <form method="post">
-	<label for="AccountID">Account ID</label>
-	<input type="integer" name="AccountID" id="AccountID">
+	<label for="transID">Transaction ID</label>
+	<input type="integer" name="transID" id="transactionID">
 	<label for="Amount">Amount</label>
-	<input type="integer" name="Amount" id="Amount">
+	<input type="integer" name="refAmount" id="Amount">
 	<label for="Date">Date</label>
-	<input type="integer" name="Date" id="Date">
+	<input type="integer" name="refDate" id="Date">
 	<label for="EventID">Event ID</label>
-	<input type="integer" name="EventID" id="EventID">
+	<input type="integer" name="refEventID" id="EventID">
 	<input type="submit" name="rsubmit" value="Submit">
 </form>
+
+<?php
+	if(array_key_exists('transID', $_POST)){
+		$string = "delete from trans_puchase where tp_transaction_id = " . $_POST["transID"];
+		OCICommit($db_conn);
+	}
+?>
 
 <h3>Create Event</h3>
 <form method="post">
