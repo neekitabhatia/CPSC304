@@ -21,7 +21,7 @@ primary key (rc_name));
 grant select on recreation_center to public;
 
 create table facilities_contains
-(fc_room_id integer not null,
+(fc_room_id integer auto_increment not null,
 fc_capacity integer null,
 rc_name varchar(40) not null,
 primary key (fc_room_id),
@@ -35,10 +35,10 @@ eb_name varchar(30) not null,
 eb_type varchar(100) not null,
 eb_cost integer not null,
 eb_date integer not null,        /* added to provide date*/
-eb_time_in integer not null, /*cannot be datetime as it is not a datatype in oracle */
-eb_time_out integer not null, /*cannot be .. ^ */
+eb_timein integer not null,
+eb_timeout integer not null,
 fc_room_id integer not null,
-primary key (eb_id, eb_time_in, eb_time_out, fc_room_id),
+primary key (eb_id),
 foreign key (fc_room_id) references facilities_contains ON DELETE CASCADE);
 
 grant select on event_booking to public;
@@ -60,12 +60,9 @@ tp_amount integer not null,
 tp_date integer not null,
 account_id integer not null,
 eb_id char(10) not null,
-eb_time_in integer not null, /*cannot be datetime as it is not a datatype in oracle */
-eb_time_out integer not null, /*cannot be .. ^ */
-fc_room_id integer not null,
 primary key (tp_transaction_id),
 foreign key (account_id) references account ON DELETE CASCADE,
-foreign key (eb_id,eb_time_in,eb_time_out,fc_room_id) references event_booking ON DELETE CASCADE);
+foreign key (eb_id) references event_booking ON DELETE CASCADE);
 
 grant select on trans_purchase to public;
 
@@ -164,16 +161,16 @@ values( '0016', '1', '8234');
 
 
 insert into trans_purchase
-values( '235', '8364293423943909', '2', '20180210113214', '3231', '12345','120000', '150000', '214');
+values( '235', '8364293423943909', '2', '20180210', '3231', '12345','120000', '150000', '214');
 
 insert into trans_purchase
-values('643', '2398010912093940', '12', '20180212122314', '7345', '12352','130000', '140000', '153');
+values('643', '2398010912093940', '12', '20180212', '7345', '12352','130000', '140000', '153');
 
 insert into trans_purchase
-values('963', '3904098123043481', '12', '20180214101312', '2385', '76435','110000', '120000', '315');
+values('963', '3904098123043481', '12', '20180214', '2385', '76435','110000', '120000', '315');
 
 insert into trans_purchase
-values('345', '5623634523453451', '11', '20180221121546', '7451', '23462', '130000', '140000', '521');
+values('345', '5623634523453451', '11', '20180221', '7451', '23462', '130000', '140000', '521');
 
 insert into trans_purchase
-values('864', '3514244523519094', '12', '20180224112325', '8234', '63451','120000', '130000', '531');
+values('864', '3514244523519094', '12', '20180224', '8234', '63451','120000', '130000', '531');

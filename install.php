@@ -34,4 +34,5 @@ function executePlainSQL($cmdstr) { //takes a plain (no bound variables) SQL com
 
 }
 
+
 ?>
