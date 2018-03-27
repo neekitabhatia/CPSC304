@@ -114,15 +114,14 @@ if($booleanlong){
 	$date = $_POST["Date"];
 	$aID = $_POST["AccountID"];
 	$EventID = $_POST["EventID"];
-  $string = "select " . "eb_cost, fc_room_id" . " from " . "event_booking" . " where eb_id = " . "'" . $EventID . "'";
+  $string = "select " . "eb_cost" . " from " . "event_booking" . " where eb_id = " . "'" . $EventID . "'";
 	$result = executePlainSQL($string);
 	while ($row = OCI_Fetch_Array($result, OCI_BOTH)){
 		$cost = $row[0];
-		$roomid = $row[1];
 	}
-	$stringf = "insert into trans_purchase values ('" . $trID . "','". $cardN . "', '" . $cost . "', '" . $date . "', '" . $aID . "', '" . $EventID . "', '" . $roomid . "')";
+	$stringf = "insert into trans_purchase values ('" . $trID . "','". $cardN . "', '" . $cost . "', '" . $date . "', '" . $aID . "', '" . $EventID . "')";
 	executePlainSQL($stringf);
-	OCICommit($db_conn);
+	OCICommit($db_conn); //should function if good connection to server
 	}
 ?>
 
