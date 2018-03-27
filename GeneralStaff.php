@@ -1,31 +1,6 @@
-<?php 
+<?php
 include "template/header.php";
-include "config.php"; # for db connectivity info
-
- if($_SERVER["REQUEST_METHOD"] == "POST") {
-       // username and password sent from form 
-      
-       $myusername = mysqli_real_escape_string($db,$_POST['username']);
-       $mypassword = mysqli_real_escape_string($db,$_POST['password']); 
-      
-       $sql = "SELECT id FROM admin WHERE username = '$myusername' and passcode = '$mypassword'";
-     $result = mysqli_query($db,$sql);
-      $row = mysqli_fetch_array($result,MYSQLI_ASSOC);
-      $active = $row['active'];
-      
-      $count = mysqli_num_rows($result);
-      
-      // If result matched $myusername and $mypassword, table row must be 1 row
-		
-      if($count == 1) {
-         session_register("myusername");
-         $_SESSION['login_user'] = $myusername;
-         
-         header("location: welcome.php");
-      }else {
-         $error = "Your Login Name or Password is invalid";
-      }
-   }
+include "install.php";
 ?>
 
 <html>
@@ -34,14 +9,29 @@ include "config.php"; # for db connectivity info
 
 <h3>Register Customer</h3>
 <form method="post">
+	<label for="ID">ID</label>
+	<input type="integer" name="ID" id="id">
 	<label for="Name">Name</label>
-	<input type="text" name="Name" id="Name">
+	<input type="text" name="Name" id="name">
 	<label for="Address">address</label>
-	<input type="text" name="address" id="address">
+	<input type="text" name="Address" id="address">
 	<label for="Phone Number">Phone Number</label>
-	<input type="integer" name="Phone Number" id="Phone Number">
+	<input type="integer" name="PhoneNumber" id="phoneNumber">
 	<input type="submit" name="submit" value="Submit">
 </form>
+
+<?php
+
+// Create new account
+if(array_key_exists('Name', $_POST)){
+	$id = $_POST["ID"];
+	$name = $_POST["Name"];
+	$address = $_POST["Address"];
+	$pnum = $_POST["PhoneNumber"];
+	executePlainSQL("insert into account values ('" . $id . "','". $name . "', '" . $address . "', '" . $pnum . "')");
+	OCICommit($db_conn);
+}
+?>
 
 <h3>Update Account</h3>
 <form method="post">
@@ -62,12 +52,48 @@ include "config.php"; # for db connectivity info
 	<input type="integer" name="TransactionID" id="TransactionID">
 	<?php echo "or"; ?>
 	<label for="AccountID">Account ID</label>
-	<input type="integer" name="AccountID" id="AccountID">
+	<input type="integer" name="trAccountID" id="trAccountID">
 	<input type="submit" name="submit" value="Submit">
 </form>
 
+<?php
+$trans_id = "'" . (string)$_POST['TransactionID'] . "'";
+$string = "select " . "*" . " from " . "trans_purchase" . " where tp_transaction_id = " . $trans_id;
+$result = executePlainSQL($string);
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+		echo "<br> transaction id: " . $row[0]; //tp_transaction_id
+		echo "<br> CardNumber: " . $row[1]; //tp_card_number
+		echo "<br> Amount: " . $row[2] . "$"; //tp_amount
+		echo "<br> Date: " . $row[3]; //tp_date
+		echo "<br> AccountID: " . $row[4]; //account_id
+		echo "<br> EventID: " . $row[5]; //eb_id
+		echo "<br> Time In: " . $row[6]; //eb_time_in
+		echo "<br> Time Out: " . $row[7]; //eb_time_out
+		echo "<br> RoomID: " . $row[8]; //fc_room_id
+	}
+?>
+
+<?php
+$trans_id = "'" . (string)$_POST['trAccountID'] . "'";
+$string = "select " . "*" . " from " . "trans_purchase" . " where account_id = " . $trans_id;
+$result = executePlainSQL($string);
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+		echo "<br> transaction id: " . $row[0]; //tp_transaction_id
+		echo "<br> CardNumber: " . $row[1]; //tp_card_number
+		echo "<br> Amount: " . $row[2] . "$"; //tp_amount
+		echo "<br> Date: " . $row[3]; //tp_date
+		echo "<br> AccountID: " . $row[4]; //account_id
+		echo "<br> EventID: " . $row[5]; //eb_id
+		echo "<br> Time In: " . $row[6]; //eb_time_in
+		echo "<br> Time Out: " . $row[7]; //eb_time_out
+		echo "<br> RoomID: " . $row[8]; //fc_room_id
+	}
+?>
+
 <h3>Purchase</h3>
 <form method="post">
+	<label for="trID">TransactionID</label>
+	<input type="integer" name="trID" id="trID">
 	<label for="AccountID">Account ID</label>
 	<input type="integer" name="AccountID" id="AccountID">
 	<label for="CardNumber">Card Number</label>
@@ -78,6 +104,27 @@ include "config.php"; # for db connectivity info
 	<input type="integer" name="EventID" id="EventID">
 	<input type="submit" name="submit" value="Submit">
 </form>
+
+
+<?php
+$booleanlong = array_key_exists('AccountID', $_POST) && array_key_exists('CardNumber', $_POST) && array_key_exists('Date', $_POST) && array_key_exists('EventID', $_POST);
+if($booleanlong){
+	$trID = $_POST["trID"];
+	$cardN = $_POST["CardNumber"];
+	$date = $_POST["Date"];
+	$aID = $_POST["AccountID"];
+	$EventID = $_POST["EventID"];
+  $string = "select " . "eb_cost, fc_room_id" . " from " . "event_booking" . " where eb_id = " . "'" . $EventID . "'";
+	$result = executePlainSQL($string);
+	while ($row = OCI_Fetch_Array($result, OCI_BOTH)){
+		$cost = $row[0];
+		$roomid = $row[1];
+	}
+	$stringf = "insert into trans_purchase values ('" . $trID . "','". $cardN . "', '" . $cost . "', '" . $date . "', '" . $aID . "', '" . $EventID . "', '" . $roomid . "')";
+	executePlainSQL($stringf);
+	OCICommit($db_conn);
+	}
+?>
 
 <h3>Refund</h3>
 <form method="post">
@@ -95,7 +142,7 @@ include "config.php"; # for db connectivity info
 <h3>Create Event</h3>
 <form method="post">
 	<label for="Name">Name</label>
-	<input type="text" name="Name" id="Name">
+	<input type="text" name="ceName" id="ceName">
 	<label for="Type">Type</label>
 	<input type="text" name="Type" id="Type">
 	<label for="Cost">Cost</label>
@@ -107,6 +154,15 @@ include "config.php"; # for db connectivity info
 	<input type="integer" name="RoomID" id="RoomID">
 	<input type="submit" name="submit" value="Submit">
 </form>
+
+<?php/*
+if(array_key_exists('ceName', $_POST)){
+				$string = "insert into event_booking values ('" . $_POST["ceName"] . "', '" . $_POST["Type"] . "', '" . $_POST["Cost"] . "', '" . $_POST["Time from"] . "', '" . $_POST["Time to"] . "', '" . $_POST["RoomID"] . "')";
+				executePlainSQL($string);
+				/*claims syntax error coming from too many fields*/
+			/*	OCICommit($db_conn); //above missing first value eb_id that is meant to be automatically generated
+		} */
+?>
 
 <h3>Delete Event</h3>
 <form method="post">
