@@ -49,8 +49,8 @@ if(array_key_exists('Name', $_POST)){
 <?php
 if(array_key_exists('AccountID', $_POST)){
 
-	$account_id = "'" . (string)$_POST['AccountID'] . "'";
-	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . $account_id;
+	$account_id = (string)$_POST['AccountID'];
+	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $account_id . "'";
 	$result = executePlainSQL($string);
 	while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 			$account_id = $row[0]; //account_id
@@ -70,7 +70,7 @@ if(array_key_exists('AccountID', $_POST)){
 			$account_pnumber = $_POST["acPhoneNumber"];
 		}
 
-		$string = "delete from account where account_id = " . $account_id;
+		$string = "delete from account where account_id = " . "'" . $account_id . "'";
 		OCICommit($db_conn);
 
 		$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
@@ -100,9 +100,6 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<br> Date: " . $row[3]; //tp_date
 		echo "<br> AccountID: " . $row[4]; //account_id
 		echo "<br> EventID: " . $row[5]; //eb_id
-		echo "<br> Time In: " . $row[6]; //eb_time_in
-		echo "<br> Time Out: " . $row[7]; //eb_time_out
-		echo "<br> RoomID: " . $row[8]; //fc_room_id
 	}
 ?>
 
@@ -152,7 +149,7 @@ if($booleanlong){
 	while ($row = OCI_Fetch_Array($result, OCI_BOTH)){
 		$cost = $row[0];
 	}
-	$stringf = "insert into trans_purchase values ('" . $trID . "','". $cardN . "', '" . $cost . "', '" . $date . "', '" . $aID . "', '" . $EventID . "')";
+	$stringf = "insert into trans_purchase values ('" . $trID . "', '". $cardN . "', '" . $cost . "', '" . $date . "', '" . $aID . "', '" . $EventID . "')";
 	executePlainSQL($stringf);
 	OCICommit($db_conn); //should function if good connection to server
 	}
