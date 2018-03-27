@@ -21,7 +21,7 @@ primary key (rc_name));
 grant select on recreation_center to public;
 
 create table facilities_contains
-(fc_room_id integer auto_increment not null,
+(fc_room_id integer not null,
 fc_capacity integer null,
 rc_name varchar(40) not null,
 primary key (fc_room_id),
@@ -35,8 +35,8 @@ eb_name varchar(30) not null,
 eb_type varchar(100) not null,
 eb_cost integer not null,
 eb_date integer not null,        /* added to provide date*/
-eb_timein integer not null,
-eb_timeout integer not null,
+eb_time_in integer not null,    /*cannot be datetime as it is not a datatype in oracle */
+eb_time_out integer not null,   /*cannot be .. ^ */
 fc_room_id integer not null,
 primary key (eb_id),
 foreign key (fc_room_id) references facilities_contains ON DELETE CASCADE);
@@ -76,7 +76,7 @@ foreign key (account_id) references account ON DELETE CASCADE);
 
 grant select on membership to public;
 
-insert into recreation_center 
+insert into recreation_center
 values ('west point grey recreation', ' 3123 west broadway ');
 
 insert into recreation_center
@@ -85,7 +85,7 @@ values ('kitsilano recreation', ' 2112 union blvd ');
 insert into recreation_center
 values ('kerrisdale recreation', ' 342 west blvd ');
 
-insert into recreation_center 
+insert into recreation_center
 values ('douglas park recreation', ' 34234 maple st ');
 
 insert into recreation_center
@@ -126,10 +126,10 @@ values('63451', 'barre fitness', 'fitness', '12', '20180224', '120000', '130000'
 
 
 
-insert into account 
+insert into account
 values('3231', 'gloria chan', '129 granville st', '6043473247');
 
-insert into account 
+insert into account
 values('7345', 'steve brown', '3571 4th ave', '6041230792');
 
 insert into account
@@ -138,39 +138,36 @@ values('2385', 'chris evans', '391 hollywood ave', '6043481237');
 insert into account
 values('7451', 'cole sprouse', '3947 disney st', '6043842870');
 
-insert into account 
+insert into account
 values('8234', 'zac efron', '247 high st', '6041082384');
 
 
-insert into membership 
+insert into membership
 values( '0012', '1', '3231');
 
-insert into membership 
+insert into membership
 values( '0013', '0', '7345');
 
-insert into membership 
+insert into membership
 values( '0014', '1', '2385');
 
-insert into membership 
+insert into membership
 values( '0015', '1', '7451');
 
-insert into membership 
+insert into membership
 values( '0016', '1', '8234');
 
-
-
+insert into trans_purchase
+values( '235', '8364293423943909', '2', '20180210113214', '3231', '12345');
 
 insert into trans_purchase
-values( '235', '8364293423943909', '2', '20180210', '3231', '12345','120000', '150000', '214');
+values('643', '2398010912093940', '12', '20180212122314', '7345', '12352');
 
 insert into trans_purchase
-values('643', '2398010912093940', '12', '20180212', '7345', '12352','130000', '140000', '153');
+values('963', '3904098123043481', '12', '20180214101312', '2385', '76435');
 
 insert into trans_purchase
-values('963', '3904098123043481', '12', '20180214', '2385', '76435','110000', '120000', '315');
+values('345', '5623634523453451', '11', '20180221121546', '7451', '23462');
 
 insert into trans_purchase
-values('345', '5623634523453451', '11', '20180221', '7451', '23462', '130000', '140000', '521');
-
-insert into trans_purchase
-values('864', '3514244523519094', '12', '20180224', '8234', '63451','120000', '130000', '531');
+values('864', '3514244523519094', '12', '20180224112325', '8234', '63451');
