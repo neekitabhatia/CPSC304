@@ -148,48 +148,112 @@ if($booleanlong){
 	<input type="text" name="Type" id="Type">
 	<label for="Cost">Cost</label>
 	<input type="integer" name="Cost" id="Cost">
+	<label for="Date">Date</label>
+	<input type= "integer" name="ceDate" id="Date">
 	<label for="Time">Time</label>
-	<input type="integer" name="Time from" id="Time">
-	<input type="integer" name="Time to" id="Time">
+	<input type="integer" name="ceTimeFrom" id="Time">
+	<input type="integer" name="ceTimeTo" id="Time">
 	<label for="RoomID">Room ID</label>
-	<input type="integer" name="RoomID" id="RoomID">
+	<input type="integer" name="ceRoomID" id="ceRoomID">
 	<input type="submit" name="cesubmit" value="Submit">
 </form>
 
 <?php
-if(array_key_exists('ceName', $_POST)){
-				$string = "insert into event_booking values ('" . $_POST["ceEventID"] . "', '" . $_POST["ceName"] . "', '" . $_POST["Type"] . "', '" . $_POST["Cost"] . "', '" . $_POST["Time from"] . "', '" . $_POST["Time to"] . "', '" . $_POST["RoomID"] . "')";
+$booleanLong = array_key_exists('ceEventID', $_POST) && array_key_exists('ceName', $_POST) && array_key_exists('Type', $_POST) && array_key_exists('Cost', $_POST) && array_key_exists('ceDate', $_POST) && array_key_exists('ceTimeFrom', $_POST) && array_key_exists('ceTimeTo', $_POST) && array_key_exists('ceRoomID', $_POST);
+if($booleanLong){
+				$string = "insert into event_booking values ('" . $_POST["ceEventID"] . "', '" . $_POST["ceName"] . "', '" . $_POST["Type"] . "', '" . $_POST["Cost"] . "', '" . $_POST["ceDate"] . "', '" . $_POST["ceTimeFrom"] . "', '" . $_POST["ceTimeTo"] . "', '" . $_POST["ceRoomID"] . "')";
 				executePlainSQL($string);
-				/*claims syntax error coming from too many fields*/
-				OCICommit($db_conn); //above missing first value eb_id that is meant to be automatically generated
+				OCICommit($db_conn);
 		}
 ?>
 
 <h3>Delete Event</h3>
 <form method="post">
 	<label for="EventId">Event Id</label>
-	<input type="integer" name="EventId" id="EventId">
-	<input type="submit" name="desubmit" value="Submit">
+	<input type="integer" name="delEventId" id="delEventId">
+	<input type="submit" name="delsubmit" value="Submit">
 </form>
+
+<?php
+	if(array_key_exists('delEventId', $_POST)){
+		$string = "delete from event_booking where eb_id = " . $_POST["delEventId"];
+		OCICommit($db_conn);
+	}
+?>
 
 <h3>Edit Event</h3>
 <form method="post">
 	<label for="EventId">Event Id</label>
-	<input type="integer" name="EventId" id="EventId">
-	<label for="Name">Name</label>
-	<input type="text" name="Name" id="Name">
-	<label for="Type">Type</label>
-	<input type="text" name="Type" id="Type">
-	<label for="Cost">Cost</label>
-	<input type="integer" name="Cost" id="Cost">
+	<input type="integer" name="eeEventId" id="eeEventId">
+	<label for="eeName">Name</label>
+	<input type="text" name="eeName" id="Name">
+	<label for="eeType">Type</label>
+	<input type="text" name="eeType" id="eeType">
+	<label for="eeCost">Cost</label>
+	<input type="integer" name="eeCost" id="eeCost">
+	<label for="eeDate">Date</label>
+	<input type="integer" name="eeDate" id="eeDate">
 	<label for="Time">Time</label>
-	<input type="integer" name="Time from" id="Time">
-	<input type="integer" name="Time to" id="Time">
+	<input type="integer" name="eeTimeFrom" id="Time">
+	<input type="integer" name="eeTimeTo" id="Time">
 	<label for="RoomID">Room ID</label>
-	<input type="integer" name="RoomID" id="RoomID">
+	<input type="integer" name="eeRoomID" id="RoomID">
 	<input type="submit" name="eesubmit" value="Submit">
 </form>
 
+<?php
+if(array_key_exists('eeEventId', $_POST)){
+
+	$event_id = "'" . (string)$_POST['eeEventId'] . "'";
+	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . $event_id;
+	$result = executePlainSQL($string);
+	while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+			$eeEventId = $row[0]; //eb_id
+			$eeName = $row[1]; //eb_name
+			$eeType = $row[2]; //eb_type
+			$eeCost = $row[3]; //eb_cost
+			$eeDate = $row[4]; //eb_date
+			$eeTIn = $row[5];  //eb_time_in
+			$eeTOut = $row[6]; //eb_time_out
+			$eeRoom = $row[7]; //eb_room_id
+		}
+		if(array_key_exists('eeName', $_POST)){
+			$eeName = $_POST["eeName"];
+		}
+
+		if(array_key_exists('eeType', $_POST)){
+			$eeType = $_POST["eeType"];
+		}
+
+		if(array_key_exists('eeCost', $_POST)){
+			$eeCost = $_POST["eeCost"];
+		}
+
+		if(array_key_exists('eeDate', $_POST)){
+			$eeDate = $_POST["eeDate"];
+		}
+
+		if(array_key_exists('eeTimeFrom', $_POST)){
+			$eeTIn = $_POST["eeTimeFrom"];
+		}
+
+		if(array_key_exists('eeTimeTo', $_POST)){
+			$eeTOut = $_POST["eeTimeTo"];
+		}
+
+		if(array_key_exists('eeRoomID', $_POST)){
+			$eeRoom = $_POST["eeRoomID"];
+		}
+
+		$string = "delete from event_booking where eb_id = " . $_POST["eeEventId"];
+		OCICommit($db_conn);
+
+		$stringf = "insert into event_booking values ('" . $eeEventId . "', '" . $eeName . "', '" . $eeType . "', '" . $eeCost . "', '" . $eeDate . "', '" . $eeTIn . "', '" . $eeTOut . "', '" . $eeRoom . "')";
+		executePlainSQL($stringf);
+		OCICommit($db_conn);
+}
+
+?>
 <a href="index.php">Back</a>
 
 <html>
