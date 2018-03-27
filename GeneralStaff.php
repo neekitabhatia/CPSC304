@@ -17,7 +17,7 @@ include "install.php";
 	<input type="text" name="Address" id="address">
 	<label for="Phone Number">Phone Number</label>
 	<input type="integer" name="PhoneNumber" id="phoneNumber">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="rcsubmit" value="Submit">
 </form>
 
 <?php
@@ -43,7 +43,7 @@ if(array_key_exists('Name', $_POST)){
 	<input type="text" name="address" id="address">
 	<label for="Phone Number">Phone Number</label>
 	<input type="integer" name="Phone Number" id="Phone Number">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="uasubmit" value="Submit">
 </form>
 
 <h3>Transaction Record</h3>
@@ -53,7 +53,7 @@ if(array_key_exists('Name', $_POST)){
 	<?php echo "or"; ?>
 	<label for="AccountID">Account ID</label>
 	<input type="integer" name="trAccountID" id="trAccountID">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="trsubmit" value="Submit">
 </form>
 
 <?php
@@ -102,7 +102,7 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 	<input type="integer" name="Date" id="Date">
 	<label for="EventID">Event ID</label>
 	<input type="integer" name="EventID" id="EventID">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="psubmit" value="Submit">
 </form>
 
 
@@ -135,11 +135,13 @@ if($booleanlong){
 	<input type="integer" name="Date" id="Date">
 	<label for="EventID">Event ID</label>
 	<input type="integer" name="EventID" id="EventID">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="rsubmit" value="Submit">
 </form>
 
 <h3>Create Event</h3>
 <form method="post">
+	<label for="EventID">EventID</label>
+	<input type="integer" name="ceEventID" id="ceEventID">
 	<label for="Name">Name</label>
 	<input type="text" name="ceName" id="ceName">
 	<label for="Type">Type</label>
@@ -151,23 +153,23 @@ if($booleanlong){
 	<input type="integer" name="Time to" id="Time">
 	<label for="RoomID">Room ID</label>
 	<input type="integer" name="RoomID" id="RoomID">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="cesubmit" value="Submit">
 </form>
 
-<?php/*
+<?php
 if(array_key_exists('ceName', $_POST)){
-				$string = "insert into event_booking values ('" . $_POST["ceName"] . "', '" . $_POST["Type"] . "', '" . $_POST["Cost"] . "', '" . $_POST["Time from"] . "', '" . $_POST["Time to"] . "', '" . $_POST["RoomID"] . "')";
+				$string = "insert into event_booking values ('" . $_POST["ceEventID"] . "', '" . $_POST["ceName"] . "', '" . $_POST["Type"] . "', '" . $_POST["Cost"] . "', '" . $_POST["Time from"] . "', '" . $_POST["Time to"] . "', '" . $_POST["RoomID"] . "')";
 				executePlainSQL($string);
 				/*claims syntax error coming from too many fields*/
-			/*	OCICommit($db_conn); //above missing first value eb_id that is meant to be automatically generated
-		} */
+				OCICommit($db_conn); //above missing first value eb_id that is meant to be automatically generated
+		}
 ?>
 
 <h3>Delete Event</h3>
 <form method="post">
 	<label for="EventId">Event Id</label>
 	<input type="integer" name="EventId" id="EventId">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="desubmit" value="Submit">
 </form>
 
 <h3>Edit Event</h3>
@@ -185,7 +187,7 @@ if(array_key_exists('ceName', $_POST)){
 	<input type="integer" name="Time to" id="Time">
 	<label for="RoomID">Room ID</label>
 	<input type="integer" name="RoomID" id="RoomID">
-	<input type="submit" name="submit" value="Submit">
+	<input type="submit" name="eesubmit" value="Submit">
 </form>
 
 <a href="index.php">Back</a>
