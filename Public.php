@@ -9,7 +9,7 @@
 	<input type="text" name="recname">
 	<label for="Event">Event Name</label>
 	<input type="text" name="ename">
-    <label for="Cost Range">Cost range</label>
+  <label for="Cost Range">Cost range</label>
 	<input type="integer" name="cmin" >
 	<input type="integer" name="cmax" >
 	<label for="Time Range">Time range</label>
@@ -18,66 +18,79 @@
 	<input type="submit" name="submit" value="submit">
 </form>
 <br> 
-<center>
+
 <?php 
 include "install.php";
 
 if (array_key_exists('submit', $_POST)) {
- 	$recname = $_POST['recname'];
+  	$recname = $_POST['recname'] ;
     $ename = $_POST['ename'];
-    $cmin = $_POST['cmin'];
-    $cmax = $_POST['cmax'];
-    $tmin = $_POST['tmin'];
-    $tmax = $_POST['tmax'];
+    $cmin =   $_POST['cmin'] ;
+    $cmax =   $_POST['cmax'] ;
+    $tmin =   $_POST['tmin'] ;
+    $tmax =   $_POST['tmax'] ;
 
-    $string = "SELECT recreation_center.rc_name " .
+    $string = "SELECT eb_name, eb_type, eb_cost, eb_date, eb_time_in, eb_time_out " .
              "FROM recreation_center, facilities_contains, event_booking " .
               "WHERE recreation_center.rc_name = facilities_contains.rc_name AND facilities_contains.fc_room_id = event_booking.fc_room_id ";
 
-              //   "FROM recreation_center " .
-              // "INNER JOIN facilities_contains ON recreation_center.rc_name = facilities_contains.rc_name " . 
-              // "INNER JOIN event_booking ON facilities_contains.fc_room_id = event_booking.fc_room_id " .
-              // "WHERE ";
-
     
     if (!empty($recname)){
-                $string .= "AND recreation_center.rc_name = '" . $recname . "'";
+                $string .= "AND recreation_center.rc_name = '" . $recname . "' ";
                 }
 
     if (!empty($ename)){
-                $string .= "AND eb_name = '" . $ename . "'";
+                $string .= "AND eb_name = '" . $ename . "' ";
                 }
 
     if (!empty($cmin)){
-                $string .= "AND eb_cost > '" . $cmin . "'";
+                $string .= "AND eb_cost > '" . $cmin . "' ";
                 }
 
     if (!empty($cmax)){
-                $string .= "AND eb_cost < '" . $cmax . "'";
+                $string .= "AND eb_cost < '" . $cmax . "' ";
                 }
 
     if (!empty($tmin)){
-                $string .= "AND eb_time_in > '" . $tmin . "'";
+                $string .= "AND eb_time_in > '" . $tmin . "' ";
                 }
 
     if (!empty($tmax)){
-                $string .= "AND eb_time_in < '" . $tmax . "'";
+                $string .= "AND eb_time_in < '" . $tmax . "' ";
                 }
 
-    $result = executePlainSQL($string);
+     $result = executePlainSQL($string);
 
-    while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-             echo $row[0]; // it wont print :(
-             echo $row[1]; // it wont print :(
+  
+     echo "<br>";
 
-          }
-//     while (($row = oci_fetch_assoc($result)) != false) {
-//     echo $row['DEPARTMENT_ID'] . " " . $row['DEPARTMENT_NAME'] . "<br>\n";
-// }
+     while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+      echo "Event Name:";
+      echo $row[0];
+      echo "&nbsp&nbsp&nbsp";
+      echo "Type:";
+      echo $row[1];
+      echo "&nbsp&nbsp&nbsp";
+      echo "Cost:";
+      echo $row[2];
+      echo "&nbsp&nbsp&nbsp";
+      echo "Date:";
+      echo $row[3];
+      echo "&nbsp&nbsp&nbsp";
+      echo "Time Start:";
+      echo $row[4];
+      echo "&nbsp&nbsp&nbsp";
+      echo "Time End:";
+      echo $row[5];
+      echo "<br>";
+     
+    }
+  
+
    }
   
 ?>
-</center>
+
 <br> 
 <a href="index.php">Back</a>
 <br> 
