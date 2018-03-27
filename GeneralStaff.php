@@ -71,11 +71,30 @@ if(array_key_exists('AccountID', $_POST)){
 		}
 
 		$string = "delete from account where account_id = " . "'" . $account_id . "'";
+		executePlainSQL($string);
 		OCICommit($db_conn);
 
 		$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
 		executePlainSQL($stringf);
 		OCICommit($db_conn);
+}
+?>
+
+<h3>Delete Account</h3>
+<form method="post">
+	<label for="AccountID">Account ID</label>
+	<input type="integer" name="delAccountID" id="AccountID">
+	<input type="submit" name="delAsubmit" value="Submit">
+</form>
+
+<?php
+if(array_key_exists('delAccountID', $_POST)){
+	$account_id = (string)$_POST['delAccountID'];
+	//trying
+	$string = "delete from account where account_id = " . $account_id;
+	executePlainSQL($string);
+	//$string = "delete from account where account_id = " . "'" . $account_id . "'";
+	OCICommit($db_conn);
 }
 ?>
 
@@ -171,6 +190,7 @@ if($booleanlong){
 <?php
 	if(array_key_exists('transID', $_POST)){
 		$string = "delete from trans_puchase where tp_transaction_id = " . $_POST["transID"];
+		executePlainSQL($string);
 		OCICommit($db_conn);
 	}
 ?>
@@ -214,6 +234,7 @@ if($booleanLong){
 <?php
 	if(array_key_exists('delEventId', $_POST)){
 		$string = "delete from event_booking where eb_id = " . $_POST["delEventId"];
+		executePlainSQL($string);
 		OCICommit($db_conn);
 	}
 ?>
@@ -283,6 +304,7 @@ if(array_key_exists('eeEventId', $_POST)){
 		}
 
 		$string = "delete from event_booking where eb_id = " . $_POST["eeEventId"];
+		executePlainSQL($string);
 		OCICommit($db_conn);
 
 		$stringf = "insert into event_booking values ('" . $eeEventId . "', '" . $eeName . "', '" . $eeType . "', '" . $eeCost . "', '" . $eeDate . "', '" . $eeTIn . "', '" . $eeTOut . "', '" . $eeRoom . "')";
