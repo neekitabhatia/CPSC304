@@ -50,7 +50,6 @@ if($booleanLong){
 <?php
 $booleanLong = 	array_key_exists('uaAccountID', $_POST) && array_key_exists('acName', $_POST) && array_key_exists('acAddress', $_POST) && array_key_exists('acPhoneNumber', $_POST);
 if($booleanLong){
-
 	$account_id = (string)$_POST["uaAccountID"];
 	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $account_id . "'";
 	$result = executePlainSQL($string);
@@ -72,11 +71,13 @@ if($booleanLong){
 			$account_pnumber = $_POST["acPhoneNumber"];
 		}
 
-		$string = "delete from account where account_id = " . "'" . $account_id . "'";
-		executePlainSQL($string);
-		OCICommit($db_conn);
+//		$string = "delete from account where account_id = " . "'" . $account_id . "'";
+//		executePlainSQL($string);
+//		OCICommit($db_conn);
 
-		$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
+	  $stringf = "update account set ac_name = '" . $account_name . "', ac_address = '" . $account_address . "', ac_phone_number = '" . $account_pnumber . "' where account_id = '" . $account_id . "'";
+	//('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')
+	//	$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
 		executePlainSQL($stringf);
 		OCICommit($db_conn);
 }
@@ -138,9 +139,6 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<br> Date: " . $row[3]; //tp_date
 		echo "<br> AccountID: " . $row[4]; //account_id
 		echo "<br> EventID: " . $row[5]; //eb_id
-		echo "<br> Time In: " . $row[6]; //eb_time_in
-		echo "<br> Time Out: " . $row[7]; //eb_time_out
-		echo "<br> RoomID: " . $row[8]; //fc_room_id
 	}
 }
 ?>
@@ -303,13 +301,13 @@ if($booleanLong){
 			$eeRoom = $_POST["eeRoomID"];
 		}
 
-		$string = "delete from event_booking where eb_id = " . $_POST["eeEventId"];
-		executePlainSQL($string);
-		OCICommit($db_conn);
-
-		$stringf = "insert into event_booking values ('" . $eeEventId . "', '" . $eeName . "', '" . $eeType . "', '" . $eeCost . "', '" . $eeDate . "', '" . $eeTIn . "', '" . $eeTOut . "', '" . $eeRoom . "')";
-		executePlainSQL($stringf);
-		OCICommit($db_conn);
+//		$string = "delete from event_booking where eb_id = " . $_POST["eeEventId"];
+//		executePlainSQL($string);
+//		OCICommit($db_conn);
+			$stringf = "update event_booking set eb_name = '" . $eeName . "', eb_type = '" . $eeType . "', eb_cost = '" . $eeCost . "', eb_date = '" . $eeDate . "', eb_time_in = '" . $eeTIn . "', eb_time_out = '" . $eeTOut . "', fc_room_id = '" . $eeRoom . "' where eb_id = '" . $eeEventId;
+//		$stringf = "insert into event_booking values ('" . $eeEventId . "', '" . $eeName . "', '" . $eeType . "', '" . $eeCost . "', '" . $eeDate . "', '" . $eeTIn . "', '" . $eeTOut . "', '" . $eeRoom . "')";
+			executePlainSQL($stringf);
+			OCICommit($db_conn);
 }
 
 ?>
