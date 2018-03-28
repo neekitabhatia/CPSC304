@@ -18,15 +18,21 @@ include "install.php";
 
 // Revenue between time ranges (Time1, Time2)
 
-$TimeFrom = $_POST['timefrom'];
-$TimeTo = $_POST['timeto'];
+$checkdates = array_key_exists('timefrom', $_POST) && array_key_exists('timeto', $_POST);
 
-$string = "select sum(tp_amount) from trans_purchase where tp_date between '"  . $TimeFrom . "'AND '" . $TimeTo . "' )";
-$result = executePlainSQL($string);
-$ans = $row[0];
-echo "Total Revenue: " . $ans;
+if($checkdates){
 
-// ORA-00942: table or view does not exist
+	$TimeFrom = $_POST['timefrom'];
+	$TimeTo = $_POST['timeto'];
+
+	$string = "select sum(tp_amount) from trans_purchase where tp_date > "  . $TimeFrom . "and tp_date <" . $TimeTo;
+	$result = executePlainSQL($string);
+	
+	$row = OCI_Fetch_Array($result, OCI_BOTH);
+	$ans = $row[0];
+	echo "Total Revenue: " . $ans;
+}
+
 ?>  
 
 <h3>Account Information</h3>
@@ -70,11 +76,9 @@ $BookingID = $_POST['BookingID'];
 
 $string = "select * from event_booking where eb_id = '" . $BookingID . "'";
 $result = executePlainSQL($string);
-echo "Booking Information: " ;
-echo $result;
 
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-	echo "Booking test";
+	echo "Booking Information: " ;
     echo "<br> Booking ID: " . $row[0]; //bookingID
     echo "<br> Name: " . $row[1]; //eb_name
     echo "<br> Type: " . $row[2]; //ac_type
@@ -102,13 +106,16 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 
 // Create Rec Center - working
 
-$rc_name = $_POST['name'];
-$rc_address = $_POST['address'];
+$checkRecCenter = array_key_exists('name', $_POST) && array_key_exists('address', $_POST); 
 
-$string = "insert into recreation_center values ('" . $rc_name . "','" . $rc_address . "')";
-$result = executePlainSQL($string);
-OCICommit($db_conn);
+if($checkRecCenter){
+	$rc_name = $_POST['name'];
+	$rc_address = $_POST['address'];
 
+	$string = "insert into recreation_center values ('" . $rc_name . "','" . $rc_address . "')";
+	$result = executePlainSQL($string);
+	OCICommit($db_conn);
+}
 ?>
 
 <h3>Edit Rec Center Information</h3>
@@ -151,13 +158,17 @@ OCICommit($db_conn);
 
 // Create Room - Working 
 
-$Room_id = $_POST['Room_id'];
-$Rec_center_name = $_POST['Rec_center_name'];
-$capacity = $_POST['Capacity'];
+$checkRoom = array_key_exists('Rec_center_name', $_POST) && array_key_exists('Room_id', $_POST) && array_key_exists('Capacity' , $_POST); 
 
-$string = "insert into facilities_contains values ('" . $Room_id . "','" . $capacity . "','" . $Rec_center_name . "')";
-$result = executePlainSQL($string);
-OCICommit($db_conn);
+if($checkRoom){
+	$Room_id = $_POST['Room_id'];
+	$Rec_center_name = $_POST['Rec_center_name'];
+	$capacity = $_POST['Capacity'];
+
+	$string = "insert into facilities_contains values ('" . $Room_id . "','" . $capacity . "','" . $Rec_center_name . "')";
+	$result = executePlainSQL($string);
+	OCICommit($db_conn);
+}
 
 ?>
 
