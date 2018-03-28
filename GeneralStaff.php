@@ -23,7 +23,8 @@ include "install.php";
 <?php
 
 // Create new account
-if(array_key_exists('Name', $_POST)){
+$booleanLong = 	array_key_exists('ID', $_POST) && array_key_exists('Name', $_POST) && array_key_exists('Address', $_POST) && array_key_exists('PhoneNumber', $_POST);
+if($booleanLong){
 	$id = $_POST["ID"];
 	$name = $_POST["Name"];
 	$address = $_POST["Address"];
@@ -36,7 +37,7 @@ if(array_key_exists('Name', $_POST)){
 <h3>Update Account</h3>
 <form method="post">
 	<label for="AccountID">Account ID</label>
-	<input type="integer" name="AccountID" id="AccountID">
+	<input type="integer" name="uaAccountID" id="AccountID">
 	<label for="Name">Name</label>
 	<input type="text" name="acName" id="Name">
 	<label for="Address">address</label>
@@ -47,9 +48,10 @@ if(array_key_exists('Name', $_POST)){
 </form>
 
 <?php
-if(array_key_exists('AccountID', $_POST)){
+$booleanLong = 	array_key_exists('uaAccountID', $_POST) && array_key_exists('acName', $_POST) && array_key_exists('acAddress', $_POST) && array_key_exists('acPhoneNumber', $_POST);
+if($booleanLong){
 
-	$account_id = (string)$_POST['AccountID'];
+	$account_id = (string)$_POST["uaAccountID"];
 	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $account_id . "'";
 	$result = executePlainSQL($string);
 	while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
@@ -109,6 +111,7 @@ if(array_key_exists('delAccountID', $_POST)){
 </form>
 
 <?php
+if(array_key_exists('TransactionID', $_POST)){
 $trans_id = "'" . (string)$_POST['TransactionID'] . "'";
 $string = "select " . "*" . " from " . "trans_purchase" . " where tp_transaction_id = " . $trans_id;
 $result = executePlainSQL($string);
@@ -120,9 +123,11 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<br> AccountID: " . $row[4]; //account_id
 		echo "<br> EventID: " . $row[5]; //eb_id
 	}
+}
 ?>
 
 <?php
+if(array_key_exists('trAccountID', $_POST)){
 $trans_id = "'" . (string)$_POST['trAccountID'] . "'";
 $string = "select " . "*" . " from " . "trans_purchase" . " where account_id = " . $trans_id;
 $result = executePlainSQL($string);
@@ -137,6 +142,7 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<br> Time Out: " . $row[7]; //eb_time_out
 		echo "<br> RoomID: " . $row[8]; //fc_room_id
 	}
+}
 ?>
 
 <h3>Purchase</h3>
@@ -178,18 +184,12 @@ if($booleanlong){
 <form method="post">
 	<label for="transID">Transaction ID</label>
 	<input type="integer" name="transID" id="transactionID">
-	<label for="Amount">Amount</label>
-	<input type="integer" name="refAmount" id="Amount">
-	<label for="Date">Date</label>
-	<input type="integer" name="refDate" id="Date">
-	<label for="EventID">Event ID</label>
-	<input type="integer" name="refEventID" id="EventID">
 	<input type="submit" name="rsubmit" value="Submit">
 </form>
 
 <?php
 	if(array_key_exists('transID', $_POST)){
-		$string = "delete from trans_puchase where tp_transaction_id = " . $_POST["transID"];
+		$string = "delete from trans_purchase where tp_transaction_id = " . $_POST["transID"];
 		executePlainSQL($string);
 		OCICommit($db_conn);
 	}
@@ -260,8 +260,8 @@ if($booleanLong){
 </form>
 
 <?php
-if(array_key_exists('eeEventId', $_POST)){
-
+$booleanLong = array_key_exists('eeEventId', $_POST) && array_key_exists('eeName', $_POST) && array_key_exists('eeType', $_POST) && array_key_exists('eeCost', $_POST) && array_key_exists('eeDate', $_POST) && array_key_exists('eeTimeFrom', $_POST) && array_key_exists('eeTimeTo', $_POST) && array_key_exists('eeRoomID', $_POST);
+if($booleanLong){
 	$event_id = "'" . (string)$_POST['eeEventId'] . "'";
 	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . $event_id;
 	$result = executePlainSQL($string);
