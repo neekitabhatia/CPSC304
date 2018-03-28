@@ -51,35 +51,40 @@ if($booleanLong){
 $booleanLong = 	array_key_exists('uaAccountID', $_POST) && array_key_exists('acName', $_POST) && array_key_exists('acAddress', $_POST) && array_key_exists('acPhoneNumber', $_POST);
 if($booleanLong){
 	$account_id = (string)$_POST["uaAccountID"];
-	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $account_id . "'";
+	$string = "select " . "*" . " from " . "account" . " where account_id = " . "'" . $account_id . "'";
 	$result = executePlainSQL($string);
-	while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-			$account_id = $row[0]; //account_id
-			$account_name = $row[1]; //account_name
-			$account_address = $row[2]; //account_address
-			$account_pnumber = $row[3]; //account_phonenumber
-		}
-		if(array_key_exists('acName', $_POST)){
-			$account_name = $_POST["acName"];
-		}
+	if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "Invalid AccountID. Try again!";}
+	else{
+		while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+					$account_id = $row[0]; //account_id
+					$account_name = $row[1]; //account_name
+					$account_address = $row[2]; //account_address
+					$account_pnumber = $row[3]; //account_phonenumber
+			}
+			if(array_key_exists('acName', $_POST)){
+				$account_name = $_POST["acName"];
+			}
 
-		if(array_key_exists('acAddress', $_POST)){
-			$account_address = $_POST["acAddress"];
-		}
+			if(array_key_exists('acAddress', $_POST)){
+				$account_address = $_POST["acAddress"];
+			}
 
-		if(array_key_exists('acPhoneNumber', $_POST)){
-			$account_pnumber = $_POST["acPhoneNumber"];
-		}
+			if(array_key_exists('acPhoneNumber', $_POST)){
+				$account_pnumber = $_POST["acPhoneNumber"];
+			}
 
-//		$string = "delete from account where account_id = " . "'" . $account_id . "'";
-//		executePlainSQL($string);
-//		OCICommit($db_conn);
+	//		$string = "delete from account where account_id = " . "'" . $account_id . "'";
+	//		executePlainSQL($string);
+	//		OCICommit($db_conn);
 
-	  $stringf = "update account set ac_name = '" . $account_name . "', ac_address = '" . $account_address . "', ac_phone_number = '" . $account_pnumber . "' where account_id = '" . $account_id . "'";
-	//('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')
-	//	$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
-		executePlainSQL($stringf);
-		OCICommit($db_conn);
+		  $stringf = "update account set ac_name = '" . $account_name . "', ac_address = '" . $account_address . "', ac_phone_number = '" . $account_pnumber . "' where account_id = '" . $account_id . "'";
+		//('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')
+		//	$stringf = "insert into account values ('" . $account_id . "', '" . $account_name . "', '" . $account_address . "', '" . $account_pnumber . "')";
+			executePlainSQL($stringf);
+			OCICommit($db_conn);
+			echo "Update Succesful!";
+	}
+
 }
 ?>
 
