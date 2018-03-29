@@ -97,12 +97,19 @@ if($booleanLong){
 
 <?php
 if(array_key_exists('delAccountID', $_POST)){
-	$account_id = (string)$_POST['delAccountID'];
+	$account_id = (string)$_POST["delAccountID"];
+	$string = "select " . "*" . " from " . "account" . " where account_id = " . "'" . $account_id . "'";
+	$result = executePlainSQL($string);
+	if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "Invalid AccountID. Try again!";}
+	else{
+
+    $account_id = (string)$_POST['delAccountID'];
 	//trying
 	$string = "delete from account where account_id = " . $account_id;
 	executePlainSQL($string);
 	//$string = "delete from account where account_id = " . "'" . $account_id . "'";
 	OCICommit($db_conn);
+}
 }
 ?>
 
@@ -118,9 +125,15 @@ if(array_key_exists('delAccountID', $_POST)){
 
 <?php
 if(array_key_exists('TransactionID', $_POST)){
-$trans_id = "'" . (string)$_POST['TransactionID'] . "'";
-$string = "select " . "*" . " from " . "trans_purchase" . " where tp_transaction_id = " . $trans_id;
+
+$trans_id = (string)$_POST["TransactionID"];
+$string = "select " . "*" . " from " . "trans_purchase" . " where tp_transaction_id = " . "'" . $trans_id . "'";
 $result = executePlainSQL($string);
+if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "Invalid TransactionID. Try again!";}
+else{
+
+	$string = "select " . "*" . " from " . "trans_purchase" . " where tp_transaction_id = " . "'" . $trans_id . "'";
+    $result = executePlainSQL($string);
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<br> transaction id: " . $row[0]; //tp_transaction_id
 		echo "<br> CardNumber: " . $row[1]; //tp_card_number
@@ -129,23 +142,31 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 		echo "<br> AccountID: " . $row[4]; //account_id
 		echo "<br> EventID: " . $row[5]; //eb_id
 	}
+}
 }
 ?>
 
 <?php
 if(array_key_exists('trAccountID', $_POST)){
-$trans_id = "'" . (string)$_POST['trAccountID'] . "'";
-$string = "select " . "*" . " from " . "trans_purchase" . " where account_id = " . $trans_id;
+$account_id = (string)$_POST["trAccountID"];
+$string = "select " . "*" . " from " . "account" . " where account_id = " . "'" . $account_id . "'";
 $result = executePlainSQL($string);
+
+if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "<br> Invalid AccountID. Try again!";}
+else{
+
+	$string = "select " . "*" . " from " . "account" . " where account_id = " . "'" . $account_id . "'";
+    $result = executePlainSQL($string);
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-		echo "<br> transaction id: " . $row[0]; //tp_transaction_id
-		echo "<br> CardNumber: " . $row[1]; //tp_card_number
-		echo "<br> Amount: " . $row[2] . "$"; //tp_amount
-		echo "<br> Date: " . $row[3]; //tp_date
-		echo "<br> AccountID: " . $row[4]; //account_id
-		echo "<br> EventID: " . $row[5]; //eb_id
+		echo "<br>  AccountID: " . $row[0]; //tp_transaction_id
+		echo "<br>  Address: " . $row[1]; //tp_card_number
+		echo "<br>  Phone Number: " . $row[2] . "$"; //tp_amount
+
+
+
 	}
 }
+ }
 ?>
 
 <h3>Purchase</h3>
@@ -165,7 +186,7 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 
 
 <?php
-$booleanlong = array_key_exists('AccountID', $_POST) && array_key_exists('CardNumber', $_POST) && array_key_exists('Date', $_POST) && array_key_exists('EventID', $_POST);
+$booleanlong = array_key_exists('trID', $_POST) && array_key_exists('AccountID', $_POST) && array_key_exists('CardNumber', $_POST) && array_key_exists('Date', $_POST) && array_key_exists('EventID', $_POST);
 if($booleanlong){
 	$trID = $_POST["trID"];
 	$cardN = $_POST["CardNumber"];
@@ -192,9 +213,17 @@ if($booleanlong){
 
 <?php
 	if(array_key_exists('transID', $_POST)){
-		$string = "delete from trans_purchase where tp_transaction_id = " . $_POST["transID"];
-		executePlainSQL($string);
-		OCICommit($db_conn);
+		$trans_id = (string)$_POST['transID'] ;
+	$string = "select " . "*" . " from " . "trans_purchase" . " where tp_transaction_id = " . "'" . $trans_id . "'" ;
+	$result = executePlainSQL($string);
+
+	if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "Invalid transID. Try again!";}
+	else{
+				$string = "delete from trans_purchase where tp_transaction_id = " . $_POST["transID"];
+				executePlainSQL($string);
+				OCICommit($db_conn);
+				echo "Refund Successful";
+	}
 	}
 ?>
 
@@ -229,17 +258,25 @@ if($booleanLong){
 
 <h3>Delete Event</h3>
 <form method="post">
-	<label for="EventId">Event Id</label>
+	<label for="EventId">EventID</label>
 	<input type="integer" name="delEventId" id="delEventId">
 	<input type="submit" name="delsubmit" value="Submit">
 </form>
 
 <?php
 	if(array_key_exists('delEventId', $_POST)){
+		$event_id = (string)$_POST['delEventId'];
+	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $event_id . "'";
+	$result = executePlainSQL($string);
+
+	if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "Invalid EventID. Try again!";}
+	else{
 		$string = "delete from event_booking where eb_id = " . $_POST["delEventId"];
 		executePlainSQL($string);
 		OCICommit($db_conn);
+		echo "Delete successful";
 	}
+}
 ?>
 
 <h3>Edit Event</h3>
@@ -265,8 +302,16 @@ if($booleanLong){
 <?php
 $booleanLong = array_key_exists('eeEventId', $_POST) && array_key_exists('eeName', $_POST) && array_key_exists('eeType', $_POST) && array_key_exists('eeCost', $_POST) && array_key_exists('eeDate', $_POST) && array_key_exists('eeTimeFrom', $_POST) && array_key_exists('eeTimeTo', $_POST) && array_key_exists('eeRoomID', $_POST);
 if($booleanLong){
-	$event_id = "'" . (string)$_POST['eeEventId'] . "'";
-	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . $event_id;
+	$event_id = (string)$_POST["eeEventId"];
+	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $event_id . "'";
+	$result = executePlainSQL($string);
+
+	if(OCI_Fetch_Array($result, OCI_BOTH) == NULL){echo "Invalid EventId. Try again!";}
+
+	else{
+
+
+	$string = "select " . "*" . " from " . "event_booking" . " where eb_id = " . "'" . $event_id . "'";
 	$result = executePlainSQL($string);
 	while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 			$eeEventId = $row[0]; //eb_id
@@ -309,23 +354,36 @@ if($booleanLong){
 //		$string = "delete from event_booking where eb_id = " . $_POST["eeEventId"];
 //		executePlainSQL($string);
 //		OCICommit($db_conn);
-			$stringf = "update event_booking set eb_name = '" . $eeName . "', eb_type = '" . $eeType . "', eb_cost = '" . $eeCost . "', eb_date = '" . $eeDate . "', eb_time_in = '" . $eeTIn . "', eb_time_out = '" . $eeTOut . "', fc_room_id = '" . $eeRoom . "' where eb_id = '" . $eeEventId;
+			$stringf = "update event_booking set eb_name = '" . $eeName . "', eb_type = '" . $eeType . "', eb_cost = '" . $eeCost . "', eb_date = '" . $eeDate . "', eb_time_in = '" . $eeTIn . "', eb_time_out = '" . $eeTOut . "', fc_room_id = '" . $eeRoom . "' where eb_id = '" . $eeEventId . "'";
 //		$stringf = "insert into event_booking values ('" . $eeEventId . "', '" . $eeName . "', '" . $eeType . "', '" . $eeCost . "', '" . $eeDate . "', '" . $eeTIn . "', '" . $eeTOut . "', '" . $eeRoom . "')";
+
+
+
 			executePlainSQL($stringf);
 			OCICommit($db_conn);
+			echo "Edit Successful";
+}
 }
 
+
+
+
+
 ?>
+
+
 
 <h3>Maximum or Minimum Average Room Cost</h3>
 <form method="post">
 	<label for="maximum">Do you want the maximum</label>
 	<input type="text" name="maximum" id="maximum">
-	<label for="minimum">Do you want the minimum</label>
-	<input type="text" name="minimum" id="minimum">
-	<input type="submit" name="mmsubmit" value="Submit">
+	<input type="submit" name="maxisubmit" value="Submit">
 </form>
-
+<form method="post">
+<label for="minimum">Do you want the minimum</label>
+<input type="text" name="minimum" id="minimum">
+<input type="submit" name="minisubmit" value="Submit">
+</form>
 <?php
 if(array_key_exists('maximum', $_POST)){
 $sql = "select fc_room_id, avg(eb_cost) from event_booking e group by fc_room_id having avg(e.eb_cost) >= ALL (select AVG(e2.eb_cost) from event_booking e2 group by fc_room_id)";
@@ -337,9 +395,13 @@ while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
 echo "<br> Room: " . $row[0];
 echo " Having the maximum average cost value of: " . $row[1];
 }
+?>
+
+
+<?php
 }
 if(array_key_exists('minimum', $_POST)){
-$sql = "select fc_room_id, avg(eb_cost) from event_booking e group by fc_room_id having avg(e.eb_cost) >= ALL (select AVG(e2.eb_cost) from event_booking e2 group by fc_room_id)";
+$sql = "select fc_room_id, avg(eb_cost) from event_booking e group by fc_room_id having avg(e.eb_cost) <= ALL (select AVG(e2.eb_cost) from event_booking e2 group by fc_room_id)";
 //$sql = "select min(avg(eb_cost)) from event_booking group by fc_room_id";
 $result = executePlainSQL($sql);
 echo "<br> <br> Rooms consisting of minimum average value: ";
@@ -348,12 +410,10 @@ echo "<br> Room: " . $row[0];
 echo " Having the minimum average cost value of: " . $row[1];
 }
 }
-else{
-echo "You did not check a checkbox above! Check one or both for results!";
-}
 ?>
 
-<a href="index.php"><br>Back</a>
+<br></br>
+<a href="index.php">Back</a>
 
 <html>
 
