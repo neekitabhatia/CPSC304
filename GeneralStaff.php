@@ -328,18 +328,24 @@ if($booleanLong){
 
 <?php
 if(array_key_exists('maximum', $_POST)){
-$sql = "select max(avg(eb_cost)) from event_booking group by fc_room_id";
+$sql = "select fc_room_id, avg(eb_cost) from event_booking e group by fc_room_id having avg(e.eb_cost) >= ALL (select AVG(e2.eb_cost) from event_booking e2 group by fc_room_id)";
+//$sql = "select max(avg(eb_cost)) from event_booking group by fc_room_id";
 //To be treated as nested aggregation as another way to write this is "select max(x) from (select fc_room_id, avg(eb_cost) x from event_booking group by fc_room_id)"
 $result = executePlainSQL($sql);
+echo "Rooms consisting of maximum average value: ";
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-echo "<br> Maximum average room cost is: " . $row[0];
+echo "<br> Room: " . $row[0];
+echo " Having the maximum average cost value of: " . $row[1];
 }
 }
 if(array_key_exists('minimum', $_POST)){
-$sql = "select min(avg(eb_cost)) from event_booking group by fc_room_id";
+$sql = "select fc_room_id, avg(eb_cost) from event_booking e group by fc_room_id having avg(e.eb_cost) >= ALL (select AVG(e2.eb_cost) from event_booking e2 group by fc_room_id)";
+//$sql = "select min(avg(eb_cost)) from event_booking group by fc_room_id";
 $result = executePlainSQL($sql);
+echo "<br> <br> Rooms consisting of minimum average value: ";
 while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
-echo "<br> Minimum average room cost is: " . $row[0];
+echo "<br> Room: " . $row[0];
+echo " Having the minimum average cost value of: " . $row[1];
 }
 }
 else{
