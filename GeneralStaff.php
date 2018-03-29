@@ -316,7 +316,38 @@ if($booleanLong){
 }
 
 ?>
-<a href="index.php">Back</a>
+
+<h3>Maximum or Minimum Average Room Cost</h3>
+<form method="post">
+	<label for="maximum">Do you want the maximum</label>
+	<input type="text" name="maximum" id="maximum">
+	<label for="minimum">Do you want the minimum</label>
+	<input type="text" name="minimum" id="minimum">
+	<input type="submit" name="mmsubmit" value="Submit">
+</form>
+
+<?php
+if(array_key_exists('maximum', $_POST)){
+$sql = "select max(avg(eb_cost)) from event_booking group by fc_room_id";
+//To be treated as nested aggregation as another way to write this is "select max(x) from (select fc_room_id, avg(eb_cost) x from event_booking group by fc_room_id)"
+$result = executePlainSQL($sql);
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<br> Maximum average room cost is: " . $row[0];
+}
+}
+if(array_key_exists('minimum', $_POST)){
+$sql = "select min(avg(eb_cost)) from event_booking group by fc_room_id";
+$result = executePlainSQL($sql);
+while ($row = OCI_Fetch_Array($result, OCI_BOTH)) {
+echo "<br> Minimum average room cost is: " . $row[0];
+}
+}
+else{
+echo "You did not check a checkbox above! Check one or both for results!";
+}
+?>
+
+<a href="index.php"><br>Back</a>
 
 <html>
 
